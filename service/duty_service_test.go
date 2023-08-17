@@ -28,7 +28,7 @@ func TestAddSoldier(t *testing.T) {
 }
 
 func TestUpdateSoldier(t *testing.T) {
-	soldierDutyService := NewSoldierService()
+	soldierService := NewSoldierService()
 
 	newSoldier := &model.Soldier{
 		ID:     1,
@@ -40,7 +40,7 @@ func TestUpdateSoldier(t *testing.T) {
 		Car:    false,
 	}
 
-	soldierDutyService.AddSoldier(newSoldier)
+	soldierService.AddSoldier(newSoldier)
 
 	updatedSoldier := &model.Soldier{
 		ID:     1,
@@ -52,12 +52,16 @@ func TestUpdateSoldier(t *testing.T) {
 		Car:    false,
 	}
 
-	err := soldierDutyService.UpdateSoldier("1", updatedSoldier)
+	err := soldierService.UpdateSoldier("1", updatedSoldier)
 	assert.Nil(t, err)
+
+	soldier, err := soldierService.GetSoldierByID("1")
+	assert.Nil(t, err)
+	assert.Equal(t, updatedSoldier.Name, soldier.Name)
 }
 
 func TestUpdateErrorSoldierNotFound(t *testing.T) {
-	soldierDutyService := NewSoldierService()
+	soldierService := NewSoldierService()
 
 	updatedSoldier := &model.Soldier{
 		ID:     1,
@@ -69,13 +73,13 @@ func TestUpdateErrorSoldierNotFound(t *testing.T) {
 		Car:    false,
 	}
 
-	err := soldierDutyService.UpdateSoldier("2", updatedSoldier)
+	err := soldierService.UpdateSoldier("2", updatedSoldier)
 	assert.NotNil(t, err)
 	assert.Equal(t, "Soldier Not Found", err.Error())
 }
 
 func TestGetSoldierByID(t *testing.T) {
-	soldierDutyService := NewSoldierService()
+	soldierService := NewSoldierService()
 
 	newSoldier := &model.Soldier{
 		ID:     1,
@@ -87,15 +91,15 @@ func TestGetSoldierByID(t *testing.T) {
 		Car:    false,
 	}
 
-	soldierDutyService.AddSoldier(newSoldier)
+	soldierService.AddSoldier(newSoldier)
 
-	soldier, err := soldierDutyService.GetSoldierByID("1")
+	soldier, err := soldierService.GetSoldierByID("1")
 	assert.Nil(t, err)
 	assert.Equal(t, newSoldier.Name, soldier.Name)
 }
 
 func TestGetErrorSoldierNotFound(t *testing.T) {
-	soldierDutyService := NewSoldierService()
+	soldierService := NewSoldierService()
 
 	newSoldier := &model.Soldier{
 		ID:     1,
@@ -107,9 +111,9 @@ func TestGetErrorSoldierNotFound(t *testing.T) {
 		Car:    false,
 	}
 
-	soldierDutyService.AddSoldier(newSoldier)
+	soldierService.AddSoldier(newSoldier)
 
-	soldier, err := soldierDutyService.GetSoldierByID("2")
+	soldier, err := soldierService.GetSoldierByID("2")
 	assert.NotNil(t, err)
 	assert.Nil(t, soldier)
 	assert.Equal(t, "Soldier Not Found", err.Error())
