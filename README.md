@@ -19,10 +19,47 @@ go run .
 
 ### `📝` Post
 
+#### `📌` Add
+
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"rank":"Captain","wife":"Jane","salary":50000,"home":true,"car":false,"corruption":true}' http://localhost:8080/soldier/eat/:commision
+curl -X POST -H "Content-Type: application/json" -d '{
+      "id": 2,
+      "name": "Alice",
+      "rank": "Sergeant",
+      "wife": "Eve",
+      "salary": 40000,
+      "home": true,
+      "car": false,
+      "corruption": false
+  }' http://localhost:8080/soldier/
+```
+
+#### `📌` Update
+
+```bash
+curl -X PUT -H "Content-Type: application/json" -d '{
+      "corruption": true
+  }' http://localhost:8080/soldier/2
+```
+
+#### `📌` Get
+
+```bash
+curl http://localhost:8080/soldier/2
+```
+
+#### `📌` Eat Tax'
+
+```bash
+curl -X PUT -H "Content-Type: application/json" -d '{
+      "salary": 40000
+  }' http://localhost:8080/soldier/eat/10000
 ```
 
 ## `📜` License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+```
+
+```
