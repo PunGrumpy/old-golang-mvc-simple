@@ -14,7 +14,7 @@ This is a simple MVC pattern for Golang. It's not a framework, it's just a simpl
 ### `📦` Install
 
 ```bash
-go run .
+go run cmd/main.go
 ```
 
 ### `📝` Post
