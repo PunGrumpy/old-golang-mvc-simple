@@ -51,7 +51,3 @@ curl http://localhost:8080/soldier/2
 ## `📜` License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-```
-
-```
