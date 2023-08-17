@@ -48,14 +48,6 @@ curl -X PUT -H "Content-Type: application/json" -d '{
 curl http://localhost:8080/soldier/2
 ```
 
-#### `📌` Eat Tax'
-
-```bash
-curl -X PUT -H "Content-Type: application/json" -d '{
-      "salary": 40000
-  }' http://localhost:8080/soldier/eat/10000
-```
-
 ## `📜` License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
