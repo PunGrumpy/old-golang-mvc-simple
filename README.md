@@ -17,9 +17,7 @@ This is a simple MVC pattern for Golang. It's not a framework, it's just a simpl
 go run cmd/main.go
 ```
 
-### `📝` Post
-
-#### `📌` Add
+### `📌` Add new soldier
 
 ```bash
 curl -X POST -H "Content-Type: application/json" -d '{
@@ -34,7 +32,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
   }' http://localhost:8080/soldier/
 ```
 
-#### `📌` Update
+### `📌` Update soldier infomation
 
 ```bash
 curl -X PUT -H "Content-Type: application/json" -d '{
@@ -42,7 +40,7 @@ curl -X PUT -H "Content-Type: application/json" -d '{
   }' http://localhost:8080/soldier/2
 ```
 
-#### `📌` Get
+### `📌` Get soldier infomation
 
 ```bash
 curl http://localhost:8080/soldier/2
