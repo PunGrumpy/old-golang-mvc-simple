@@ -14,7 +14,7 @@ var (
 )
 
 type DutyService interface {
-	AddSoldier(soldier *model.Soldier)
+	AddSoldier(soldier *model.Soldier) error
 	UpdateSoldier(soldierID string, updatedSoldier *model.Soldier) error
 	GetSoldierByID(soliderID string) (*model.Soldier, error)
 }
@@ -29,11 +29,24 @@ func NewSoldierService() DutyService {
 	}
 }
 
-func (s *soldierDutyService) AddSoldier(soldier *model.Soldier) {
+// func (s *soldierDutyService) AddSoldier(soldier *model.Soldier) error {
+// 	soldiersMutex.Lock()
+// 	defer soldiersMutex.Unlock()
+
+// 	s.soldiers[strconv.Itoa(soldier.ID)] = soldier
+// 	return nil
+// }
+
+func (s *soldierDutyService) AddSoldier(soldier *model.Soldier) error {
 	soldiersMutex.Lock()
 	defer soldiersMutex.Unlock()
 
+	if _, found := s.soldiers[strconv.Itoa(soldier.ID)]; found {
+		return errors.New("Soldier ID Already Exists")
+	}
+
 	s.soldiers[strconv.Itoa(soldier.ID)] = soldier
+	return nil
 }
 
 func (s *soldierDutyService) UpdateSoldier(soldierID string, updatedSoldier *model.Soldier) error {
@@ -44,7 +57,24 @@ func (s *soldierDutyService) UpdateSoldier(soldierID string, updatedSoldier *mod
 		return errors.New("Soldier Not Found")
 	}
 
-	s.soldiers[soldierID] = updatedSoldier
+	if updatedSoldier.Name != "" {
+		s.soldiers[soldierID].Name = updatedSoldier.Name
+	}
+	if updatedSoldier.Rank != "" {
+		s.soldiers[soldierID].Rank = updatedSoldier.Rank
+	}
+	if updatedSoldier.Salary != 0 {
+		s.soldiers[soldierID].Salary = updatedSoldier.Salary
+	}
+	if updatedSoldier.Home {
+		s.soldiers[soldierID].Home = updatedSoldier.Home
+	}
+	if updatedSoldier.Car {
+		s.soldiers[soldierID].Car = updatedSoldier.Car
+	}
+	if updatedSoldier.Corruption {
+		s.soldiers[soldierID].Corruption = updatedSoldier.Corruption
+	}
 	return nil
 }
 

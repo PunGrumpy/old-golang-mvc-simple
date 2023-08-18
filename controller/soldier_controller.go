@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/PunGrumpy/golang-mvc/model"
 	"github.com/PunGrumpy/golang-mvc/service"
@@ -19,9 +18,9 @@ type soldierController struct {
 	dutyService service.DutyService
 }
 
-func NewSoldierController(dutyservice service.DutyService) SoldierController {
+func NewSoldierController(dutyService service.DutyService) SoldierController {
 	return &soldierController{
-		dutyService: dutyservice,
+		dutyService: dutyService,
 	}
 }
 
@@ -32,13 +31,11 @@ func (s *soldierController) AddSoldier(c *gin.Context) {
 		return
 	}
 
-	id := strconv.Itoa(newSoldier.ID)
-	if _, found := s.dutyService.GetSoldierByID(id); found == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Soldier ID Already Exists"})
+	if err := s.dutyService.AddSoldier(&newSoldier); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	s.dutyService.AddSoldier(&newSoldier)
 	c.JSON(http.StatusCreated, gin.H{"soldier": newSoldier})
 }
 
@@ -54,13 +51,15 @@ func (s *soldierController) UpdateSoldier(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Soldier updated successfully"})
 }
 
 func (s *soldierController) GetSoldierByID(c *gin.Context) {
 	id := c.Param("id")
 	soldierInfo, err := s.dutyService.GetSoldierByID(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"soldier": soldierInfo})
