@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/PunGrumpy/golang-mvc/model"
+	"github.com/PunGrumpy/golang-mvc-simple/model"
 )
 
 var (

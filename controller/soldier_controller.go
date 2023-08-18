@@ -3,8 +3,8 @@ package controller
 import (
 	"net/http"
 
-	"github.com/PunGrumpy/golang-mvc/model"
-	"github.com/PunGrumpy/golang-mvc/service"
+	"github.com/PunGrumpy/golang-mvc-simple/model"
+	"github.com/PunGrumpy/golang-mvc-simple/service"
 	"github.com/gin-gonic/gin"
 )
 

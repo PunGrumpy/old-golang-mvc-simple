@@ -1,4 +1,4 @@
-module github.com/PunGrumpy/golang-mvc
+module github.com/PunGrumpy/golang-mvc-simple
 
 go 1.21.0
 

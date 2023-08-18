@@ -3,7 +3,7 @@ package service
 import (
 	"testing"
 
-	"github.com/PunGrumpy/golang-mvc/model"
+	"github.com/PunGrumpy/golang-mvc-simple/model"
 	"github.com/stretchr/testify/assert"
 )
 

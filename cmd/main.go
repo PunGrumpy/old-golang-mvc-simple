@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/PunGrumpy/golang-mvc/controller"
-	"github.com/PunGrumpy/golang-mvc/pkg/env"
-	"github.com/PunGrumpy/golang-mvc/service"
+	"github.com/PunGrumpy/golang-mvc-simple/controller"
+	"github.com/PunGrumpy/golang-mvc-simple/pkg/env"
+	"github.com/PunGrumpy/golang-mvc-simple/service"
 	"github.com/gin-gonic/gin"
 )
 

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/PunGrumpy/golang-mvc/model"
+	"github.com/PunGrumpy/golang-mvc-simple/model"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
