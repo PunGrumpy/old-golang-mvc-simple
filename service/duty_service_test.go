@@ -7,8 +7,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAddSoldier(t *testing.T) {
-	soldierService := NewSoldierService()
+const soldierNotFoundError = "Soldier Not Found"
+
+func setupSoldierService() *soldierDutyService {
+	return NewSoldierService().(*soldierDutyService)
+}
+
+func TestAddAndRetrieveSoldier(t *testing.T) {
+	soldierService := setupSoldierService()
 
 	newSoldier := &model.Soldier{
 		ID:     1,
@@ -22,13 +28,22 @@ func TestAddSoldier(t *testing.T) {
 
 	soldierService.AddSoldier(newSoldier)
 
-	soldier, err := soldierService.GetSoldierByID("1")
-	assert.Nil(t, err)
-	assert.Equal(t, newSoldier.Name, soldier.Name)
+	t.Run("GetSoldierByID", func(t *testing.T) {
+		soldier, err := soldierService.GetSoldierByID("1")
+		assert.Nil(t, err)
+		assert.Equal(t, newSoldier.Name, soldier.Name)
+	})
+
+	t.Run("GetErrorSoldierNotFound", func(t *testing.T) {
+		soldier, err := soldierService.GetSoldierByID("2")
+		assert.NotNil(t, err)
+		assert.Nil(t, soldier)
+		assert.Equal(t, soldierNotFoundError, err.Error())
+	})
 }
 
 func TestUpdateSoldier(t *testing.T) {
-	soldierService := NewSoldierService()
+	soldierService := setupSoldierService()
 
 	newSoldier := &model.Soldier{
 		ID:     1,
@@ -52,69 +67,18 @@ func TestUpdateSoldier(t *testing.T) {
 		Car:    false,
 	}
 
-	err := soldierService.UpdateSoldier("1", updatedSoldier)
-	assert.Nil(t, err)
+	t.Run("UpdateSoldier", func(t *testing.T) {
+		err := soldierService.UpdateSoldier("1", updatedSoldier)
+		assert.Nil(t, err)
 
-	soldier, err := soldierService.GetSoldierByID("1")
-	assert.Nil(t, err)
-	assert.Equal(t, updatedSoldier.Name, soldier.Name)
-}
+		soldier, err := soldierService.GetSoldierByID("1")
+		assert.Nil(t, err)
+		assert.Equal(t, updatedSoldier.Name, soldier.Name)
+	})
 
-func TestUpdateErrorSoldierNotFound(t *testing.T) {
-	soldierService := NewSoldierService()
-
-	updatedSoldier := &model.Soldier{
-		ID:     1,
-		Name:   "Bob",
-		Rank:   "Sergeant",
-		Wife:   "Eve",
-		Salary: 40000,
-		Home:   true,
-		Car:    false,
-	}
-
-	err := soldierService.UpdateSoldier("2", updatedSoldier)
-	assert.NotNil(t, err)
-	assert.Equal(t, "Soldier Not Found", err.Error())
-}
-
-func TestGetSoldierByID(t *testing.T) {
-	soldierService := NewSoldierService()
-
-	newSoldier := &model.Soldier{
-		ID:     1,
-		Name:   "Alice",
-		Rank:   "Sergeant",
-		Wife:   "Eve",
-		Salary: 40000,
-		Home:   true,
-		Car:    false,
-	}
-
-	soldierService.AddSoldier(newSoldier)
-
-	soldier, err := soldierService.GetSoldierByID("1")
-	assert.Nil(t, err)
-	assert.Equal(t, newSoldier.Name, soldier.Name)
-}
-
-func TestGetErrorSoldierNotFound(t *testing.T) {
-	soldierService := NewSoldierService()
-
-	newSoldier := &model.Soldier{
-		ID:     1,
-		Name:   "Alice",
-		Rank:   "Sergeant",
-		Wife:   "Eve",
-		Salary: 40000,
-		Home:   true,
-		Car:    false,
-	}
-
-	soldierService.AddSoldier(newSoldier)
-
-	soldier, err := soldierService.GetSoldierByID("2")
-	assert.NotNil(t, err)
-	assert.Nil(t, soldier)
-	assert.Equal(t, "Soldier Not Found", err.Error())
+	t.Run("UpdateErrorSoldierNotFound", func(t *testing.T) {
+		err := soldierService.UpdateSoldier("2", updatedSoldier)
+		assert.NotNil(t, err)
+		assert.Equal(t, soldierNotFoundError, err.Error())
+	})
 }
