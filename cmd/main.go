@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/PunGrumpy/golang-mvc/controller"
+	"github.com/PunGrumpy/golang-mvc/pkg/env"
 	"github.com/PunGrumpy/golang-mvc/service"
 	"github.com/gin-gonic/gin"
 )
@@ -17,6 +18,11 @@ func main() {
 		soldierGroup.GET("/:id", soldierController.GetSoldierByID)
 		soldierGroup.PUT("/:id", soldierController.UpdateSoldier)
 	}
-	port := "8080"
-	server.Run(":" + port)
+	port := env.GetEnvirontment("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	if err := server.Run(":" + port); err != nil {
+		panic(err.Error())
+	}
 }
