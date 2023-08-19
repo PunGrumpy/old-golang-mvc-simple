@@ -65,6 +65,23 @@ func TestAddSoldier(t *testing.T) {
 	assert.Equal(t, newSoldier.Name, response.Soldier.Name)
 }
 
+func TestAddSoldierWithInvalidPayload(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	engine := gin.Default()
+	mockService := new(MockDutyService)
+	controller := NewSoldierController(mockService)
+	engine.POST("/soldier", controller.AddSoldier)
+
+	req, _ := http.NewRequest("POST", "/soldier", strings.NewReader("invalid payload"))
+	recorder := httptest.NewRecorder()
+
+	engine.ServeHTTP(recorder, req)
+
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
+	assert.Equal(t, "application/json; charset=utf-8", recorder.Header().Get("Content-Type"))
+}
+
 func TestUpdateSoldier(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
@@ -88,6 +105,23 @@ func TestUpdateSoldier(t *testing.T) {
 	engine.ServeHTTP(recorder, req)
 
 	assert.Equal(t, http.StatusOK, recorder.Code)
+	assert.Equal(t, "application/json; charset=utf-8", recorder.Header().Get("Content-Type"))
+}
+
+func TestUpdateSoldierInvalidPayload(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
+	engine := gin.Default()
+	mockService := new(MockDutyService)
+	controller := NewSoldierController(mockService)
+	engine.PUT("/soldier/:id", controller.UpdateSoldier)
+
+	req, _ := http.NewRequest("PUT", "/soldier/1", strings.NewReader("invalid payload"))
+	recorder := httptest.NewRecorder()
+
+	engine.ServeHTTP(recorder, req)
+
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
 	assert.Equal(t, "application/json; charset=utf-8", recorder.Header().Get("Content-Type"))
 }
 
