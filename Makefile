@@ -11,5 +11,8 @@ build:
 test:
 	$(GO) test -race -cover -coverprofile=coverage.out -covermode=atomic ./...
 
+test-cover:
+	$(GO) tool cover -html=coverage.out
+
 clean:
 	rm -rf $(BIN)
