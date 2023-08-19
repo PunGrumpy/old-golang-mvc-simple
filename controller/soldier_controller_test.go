@@ -32,13 +32,25 @@ func (m *MockDutyService) GetSoldierByID(soldierID string) (*model.Soldier, erro
 	return args.Get(0).(*model.Soldier), args.Error(1)
 }
 
-func TestAddSoldier(t *testing.T) {
+func ServerMock(t *testing.T) (*gin.Engine, *MockDutyService) {
 	gin.SetMode(gin.TestMode)
 
-	engine := gin.Default()
+	server := gin.Default()
 	mockService := new(MockDutyService)
-	controller := NewSoldierController(mockService)
-	engine.POST("/soldier", controller.AddSoldier)
+	mockController := NewSoldierController(mockService)
+
+	serverGroup := server.Group("/soldier")
+	{
+		serverGroup.POST("", mockController.AddSoldier)
+		serverGroup.PUT("/:id", mockController.UpdateSoldier)
+		serverGroup.GET("/:id", mockController.GetSoldierByID)
+	}
+
+	return server, mockService
+}
+
+func TestAddSoldier(t *testing.T) {
+	engine, mockService := ServerMock(t)
 
 	newSoldier := model.Soldier{
 		Name:   "Alice",
@@ -66,12 +78,7 @@ func TestAddSoldier(t *testing.T) {
 }
 
 func TestAddSoldierWithInvalidPayload(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-
-	engine := gin.Default()
-	mockService := new(MockDutyService)
-	controller := NewSoldierController(mockService)
-	engine.POST("/soldier", controller.AddSoldier)
+	engine, _ := ServerMock(t)
 
 	req, _ := http.NewRequest("POST", "/soldier", strings.NewReader("invalid payload"))
 	recorder := httptest.NewRecorder()
@@ -83,12 +90,7 @@ func TestAddSoldierWithInvalidPayload(t *testing.T) {
 }
 
 func TestUpdateSoldier(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-
-	engine := gin.Default()
-	mockService := new(MockDutyService)
-	controller := NewSoldierController(mockService)
-	engine.PUT("/soldier/:id", controller.UpdateSoldier)
+	engine, mockService := ServerMock(t)
 
 	updatedSoldier := model.Soldier{
 		Name:   "Alice",
@@ -109,12 +111,7 @@ func TestUpdateSoldier(t *testing.T) {
 }
 
 func TestUpdateSoldierInvalidPayload(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-
-	engine := gin.Default()
-	mockService := new(MockDutyService)
-	controller := NewSoldierController(mockService)
-	engine.PUT("/soldier/:id", controller.UpdateSoldier)
+	engine, _ := ServerMock(t)
 
 	req, _ := http.NewRequest("PUT", "/soldier/1", strings.NewReader("invalid payload"))
 	recorder := httptest.NewRecorder()
@@ -126,12 +123,7 @@ func TestUpdateSoldierInvalidPayload(t *testing.T) {
 }
 
 func TestGetSoldierByID(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-
-	engine := gin.Default()
-	mockService := new(MockDutyService)
-	controller := NewSoldierController(mockService)
-	engine.GET("/soldier/:id", controller.GetSoldierByID)
+	engine, mockService := ServerMock(t)
 
 	newSoldier := model.Soldier{
 		Name:   "Alice",
