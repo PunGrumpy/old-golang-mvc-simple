@@ -1,0 +1,14 @@
+# Output
+*.out
+
+# Log
+*.log
+
+# Build
+build/
+
+# Dependencies
+vendor/
+
+# OSX
+.DS_Store
