@@ -2,7 +2,7 @@ package env
 
 import "os"
 
-func GetEnvirontment(envName string) string {
+func GetEnvironment(envName string) string {
 	found := os.Getenv(envName)
 	if found == "" {
 		return ""

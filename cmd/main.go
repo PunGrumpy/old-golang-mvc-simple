@@ -18,7 +18,7 @@ func main() {
 		soldierGroup.GET("/:id", soldierController.GetSoldierByID)
 		soldierGroup.PUT("/:id", soldierController.UpdateSoldier)
 	}
-	port := env.GetEnvirontment("PORT")
+	port := env.GetEnvironment("PORT")
 	if port == "" {
 		port = "8080"
 	}

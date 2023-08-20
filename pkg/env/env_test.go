@@ -12,7 +12,7 @@ func TestGetEnvironment(t *testing.T) {
 	expectedValue := "test"
 	os.Setenv(envName, expectedValue)
 
-	actualValue := GetEnvirontment(envName)
+	actualValue := GetEnvironment(envName)
 
 	assert.Equal(t, expectedValue, actualValue)
 	assert.NotEqual(t, "not test", actualValue)
@@ -23,7 +23,7 @@ func TestGetEnvironmentNotFound(t *testing.T) {
 	expectedValue := ""
 	os.Setenv(envName, expectedValue)
 
-	actualValue := GetEnvirontment(envName)
+	actualValue := GetEnvironment(envName)
 
 	assert.Equal(t, expectedValue, actualValue)
 	assert.NotEqual(t, "not test", actualValue)
