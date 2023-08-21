@@ -42,6 +42,14 @@ func TestAddAndRetrieveSoldier(t *testing.T) {
 		assert.Nil(t, soldier)
 		assert.Equal(t, soldierNotFoundError, err.Error())
 	})
+
+	t.Run("AlreadyExistsError", func(t *testing.T) {
+		err := soldierService.AddSoldier(newSoldier)
+		assert.NotNil(t, err)
+		assert.Equal(t, "Soldier ID Already Exists", err.Error())
+	})
+
+	soldiersMap = make(map[string]*model.Soldier)
 }
 
 func TestUpdateSoldier(t *testing.T) {
@@ -85,6 +93,8 @@ func TestUpdateSoldier(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.Equal(t, soldierNotFoundError, err.Error())
 	})
+
+	soldiersMap = make(map[string]*model.Soldier)
 }
 
 func TestDeleteSoldier(t *testing.T) {
@@ -119,4 +129,6 @@ func TestDeleteSoldier(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.Equal(t, soldierNotFoundError, err.Error())
 	})
+
+	soldiersMap = make(map[string]*model.Soldier)
 }
