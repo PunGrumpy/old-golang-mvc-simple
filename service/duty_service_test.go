@@ -13,6 +13,36 @@ func setupSoldierService() *soldierDutyService {
 	return NewSoldierService().(*soldierDutyService)
 }
 
+func TestGetAllSoldiers(t *testing.T) {
+	soldierDutyService := setupSoldierService()
+
+	t.Run("NotFoundSoldier", func(t *testing.T) {
+		soldiers := soldierDutyService.GetAllSoldier()
+		assert.Nil(t, soldiers)
+	})
+
+	newSoldier := &model.Soldier{
+		ID:     1,
+		Name:   "Alice",
+		Rank:   "Sergeant",
+		Wife:   "Eve",
+		Salary: 40000,
+		Home:   true,
+		Car:    false,
+	}
+
+	if err := soldierDutyService.AddSoldier(newSoldier); err != nil {
+		t.Error(err)
+	}
+
+	t.Run("GetAllSoldiers", func(t *testing.T) {
+		soldiers := soldierDutyService.GetAllSoldier()
+		assert.Equal(t, 1, len(soldiers))
+	})
+
+	soldiersMap = make(map[string]*model.Soldier)
+}
+
 func TestAddAndRetrieveSoldier(t *testing.T) {
 	soldierService := setupSoldierService()
 
