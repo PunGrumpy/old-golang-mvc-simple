@@ -46,6 +46,12 @@ curl -X PUT -H "Content-Type: application/json" -d '{
 curl http://localhost:8080/soldier/2
 ```
 
+### `📌` Delete soldier
+
+```bash
+curl -X DELETE http://localhost:8080/soldier/2
+```
+
 ## `📜` License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
