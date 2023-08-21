@@ -5,6 +5,11 @@
 
 <br />
 
+## `🧪` Test
+
+[![codecov](https://codecov.io/gh/PunGrumpy/golang-mvc-simple/graph/badge.svg?token=5JWUON145V)](https://codecov.io/gh/PunGrumpy/golang-mvc-simple)
+[![🐰 Go](https://github.com/PunGrumpy/golang-mvc-simple/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/PunGrumpy/golang-mvc-simple/actions/workflows/go.yml)
+
 ## `📝` About
 
 This is a simple MVC pattern for Golang. It's not a framework, it's just a simple pattern to help you organize your code.
