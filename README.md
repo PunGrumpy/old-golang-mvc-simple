@@ -22,6 +22,12 @@ This is a simple MVC pattern for Golang. It's not a framework, it's just a simpl
 go run cmd/main.go
 ```
 
+### `📌` Get all soldiers
+
+```bash
+curl http://localhost:8080/soldier/
+```
+
 ### `📌` Add new soldier
 
 ```bash
