@@ -26,7 +26,9 @@ func TestAddAndRetrieveSoldier(t *testing.T) {
 		Car:    false,
 	}
 
-	soldierService.AddSoldier(newSoldier)
+	if err := soldierService.AddSoldier(newSoldier); err != nil {
+		t.Error(err)
+	}
 
 	t.Run("GetSoldierByID", func(t *testing.T) {
 		soldier, err := soldierService.GetSoldierByID("1")
@@ -55,7 +57,9 @@ func TestUpdateSoldier(t *testing.T) {
 		Car:    false,
 	}
 
-	soldierService.AddSoldier(newSoldier)
+	if err := soldierService.AddSoldier(newSoldier); err != nil {
+		t.Error(err)
+	}
 
 	updatedSoldier := &model.Soldier{
 		ID:     1,
@@ -96,7 +100,9 @@ func TestDeleteSoldier(t *testing.T) {
 		Car:    false,
 	}
 
-	soldierService.AddSoldier(newSoldier)
+	if err := soldierService.AddSoldier(newSoldier); err != nil {
+		t.Error(err)
+	}
 
 	t.Run("DeleteSoldier", func(t *testing.T) {
 		err := soldierService.DeleteSoldierByID("1")
