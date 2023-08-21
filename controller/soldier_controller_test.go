@@ -33,6 +33,11 @@ func (m *MockDutyService) GetSoldierByID(soldierID string) (*model.Soldier, erro
 	return args.Get(0).(*model.Soldier), args.Error(1)
 }
 
+func (m *MockDutyService) DeleteSoldierByID(soldierID string) error {
+	args := m.Called(soldierID)
+	return args.Error(0)
+}
+
 func ServerMock(t *testing.T) (*gin.Engine, *MockDutyService) {
 	gin.SetMode(gin.TestMode)
 
@@ -45,6 +50,7 @@ func ServerMock(t *testing.T) (*gin.Engine, *MockDutyService) {
 		serverGroup.POST("", mockController.AddSoldier)
 		serverGroup.PUT("/:id", mockController.UpdateSoldier)
 		serverGroup.GET("/:id", mockController.GetSoldierByID)
+		serverGroup.DELETE("/:id", mockController.DeleteSoldierByID)
 	}
 
 	return server, mockService
@@ -203,6 +209,32 @@ func TestGetSoldierByIDWithNotFoundSoldier(t *testing.T) {
 	mockService.On("GetSoldierByID", mock.AnythingOfType("string")).Return(&newSoldier, errors.New("Soldier not found"))
 
 	req, _ := http.NewRequest("GET", "/soldier/1", nil)
+	recorder := httptest.NewRecorder()
+	engine.ServeHTTP(recorder, req)
+
+	assert.Equal(t, http.StatusNotFound, recorder.Code)
+	assert.Equal(t, "application/json; charset=utf-8", recorder.Header().Get("Content-Type"))
+}
+
+func TestDeleteSoldierByID(t *testing.T) {
+	engine, mockService := ServerMock(t)
+
+	mockService.On("DeleteSoldierByID", mock.AnythingOfType("string")).Return(nil)
+
+	req, _ := http.NewRequest("DELETE", "/soldier/1", nil)
+	recorder := httptest.NewRecorder()
+	engine.ServeHTTP(recorder, req)
+
+	assert.Equal(t, http.StatusOK, recorder.Code)
+	assert.Equal(t, "application/json; charset=utf-8", recorder.Header().Get("Content-Type"))
+}
+
+func TestDeleteSoldierByIDWithNotFoundSoldier(t *testing.T) {
+	engine, mockService := ServerMock(t)
+
+	mockService.On("DeleteSoldierByID", mock.AnythingOfType("string")).Return(errors.New("Soldier not found"))
+
+	req, _ := http.NewRequest("DELETE", "/soldier/1", nil)
 	recorder := httptest.NewRecorder()
 	engine.ServeHTTP(recorder, req)
 

@@ -17,6 +17,7 @@ func main() {
 		soldierGroup.POST("/", soldierController.AddSoldier)
 		soldierGroup.GET("/:id", soldierController.GetSoldierByID)
 		soldierGroup.PUT("/:id", soldierController.UpdateSoldier)
+		soldierGroup.DELETE("/:id", soldierController.DeleteSoldierByID)
 	}
 	port := env.GetEnvironment("PORT")
 	if port == "" {

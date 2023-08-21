@@ -17,6 +17,7 @@ type DutyService interface {
 	AddSoldier(soldier *model.Soldier) error
 	UpdateSoldier(soldierID string, updatedSoldier *model.Soldier) error
 	GetSoldierByID(soliderID string) (*model.Soldier, error)
+	DeleteSoldierByID(soldierID string) error
 }
 
 type soldierDutyService struct {
@@ -76,4 +77,16 @@ func (s *soldierDutyService) GetSoldierByID(soldierID string) (*model.Soldier, e
 		return nil, errors.New("Soldier Not Found")
 	}
 	return soldier, nil
+}
+
+func (s *soldierDutyService) DeleteSoldierByID(soldierID string) error {
+	soldiersMutex.Lock()
+	defer soldiersMutex.Unlock()
+
+	if _, found := s.soldiers[soldierID]; !found {
+		return errors.New("Soldier Not Found")
+	}
+
+	delete(s.soldiers, soldierID)
+	return nil
 }

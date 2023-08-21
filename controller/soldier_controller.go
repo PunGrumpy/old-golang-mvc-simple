@@ -12,6 +12,7 @@ type SoldierController interface {
 	AddSoldier(c *gin.Context)
 	UpdateSoldier(c *gin.Context)
 	GetSoldierByID(c *gin.Context)
+	DeleteSoldierByID(c *gin.Context)
 }
 
 type soldierController struct {
@@ -63,4 +64,13 @@ func (s *soldierController) GetSoldierByID(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"soldier": soldierInfo})
+}
+
+func (s *soldierController) DeleteSoldierByID(c *gin.Context) {
+	id := c.Param("id")
+	if err := s.dutyService.DeleteSoldierByID(id); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Soldier deleted successfully"})
 }

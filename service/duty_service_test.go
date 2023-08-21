@@ -82,3 +82,35 @@ func TestUpdateSoldier(t *testing.T) {
 		assert.Equal(t, soldierNotFoundError, err.Error())
 	})
 }
+
+func TestDeleteSoldier(t *testing.T) {
+	soldierService := setupSoldierService()
+
+	newSoldier := &model.Soldier{
+		ID:     1,
+		Name:   "Alice",
+		Rank:   "Sergeant",
+		Wife:   "Eve",
+		Salary: 40000,
+		Home:   true,
+		Car:    false,
+	}
+
+	soldierService.AddSoldier(newSoldier)
+
+	t.Run("DeleteSoldier", func(t *testing.T) {
+		err := soldierService.DeleteSoldierByID("1")
+		assert.Nil(t, err)
+
+		soldier, err := soldierService.GetSoldierByID("1")
+		assert.NotNil(t, err)
+		assert.Nil(t, soldier)
+		assert.Equal(t, soldierNotFoundError, err.Error())
+	})
+
+	t.Run("DeleteErrorSoldierNotFound", func(t *testing.T) {
+		err := soldierService.DeleteSoldierByID("2")
+		assert.NotNil(t, err)
+		assert.Equal(t, soldierNotFoundError, err.Error())
+	})
+}
