@@ -35,6 +35,8 @@ jobs:
           file: coverage.out
           flags: unittests
           name: codecov-umbrella
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: 📦 Build
         run: go build -o ./bin/ cmd/main.go
