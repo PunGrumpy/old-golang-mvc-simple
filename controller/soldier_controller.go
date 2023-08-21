@@ -9,6 +9,7 @@ import (
 )
 
 type SoldierController interface {
+	GetAllSoldier(c *gin.Context)
 	AddSoldier(c *gin.Context)
 	UpdateSoldier(c *gin.Context)
 	GetSoldierByID(c *gin.Context)
@@ -23,6 +24,17 @@ func NewSoldierController(dutyService service.DutyService) SoldierController {
 	return &soldierController{
 		dutyService: dutyService,
 	}
+}
+
+func (s *soldierController) GetAllSoldier(c *gin.Context) {
+	soldierList := s.dutyService.GetAllSoldier()
+
+	if len(soldierList) == 0 {
+		c.JSON(http.StatusOK, gin.H{"soldiers": nil})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"soldiers": soldierList})
 }
 
 func (s *soldierController) AddSoldier(c *gin.Context) {

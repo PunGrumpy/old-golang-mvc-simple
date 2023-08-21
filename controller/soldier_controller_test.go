@@ -18,6 +18,11 @@ type MockDutyService struct {
 	mock.Mock
 }
 
+func (m *MockDutyService) GetAllSoldier() []*model.Soldier {
+	args := m.Called()
+	return args.Get(0).([]*model.Soldier)
+}
+
 func (m *MockDutyService) AddSoldier(soldier *model.Soldier) error {
 	args := m.Called(soldier)
 	return args.Error(0)
@@ -47,6 +52,7 @@ func ServerMock(t *testing.T) (*gin.Engine, *MockDutyService) {
 
 	serverGroup := server.Group("/soldier")
 	{
+		serverGroup.GET("", mockController.GetAllSoldier)
 		serverGroup.POST("", mockController.AddSoldier)
 		serverGroup.PUT("/:id", mockController.UpdateSoldier)
 		serverGroup.GET("/:id", mockController.GetSoldierByID)
@@ -54,6 +60,59 @@ func ServerMock(t *testing.T) (*gin.Engine, *MockDutyService) {
 	}
 
 	return server, mockService
+}
+
+func TestGetAllSoldier(t *testing.T) {
+	engine, mockService := ServerMock(t)
+
+	newSoldier_1 := model.Soldier{
+		Name:   "Alice",
+		Rank:   "Sergeant",
+		Salary: 40000,
+	}
+
+	newSoldier_2 := model.Soldier{
+		Name:   "Bob",
+		Rank:   "Corporal",
+		Salary: 30000,
+	}
+
+	mockService.On("GetAllSoldier").Return([]*model.Soldier{&newSoldier_1, &newSoldier_2}, nil)
+
+	req, _ := http.NewRequest("GET", "/soldier", nil)
+	recorder := httptest.NewRecorder()
+	engine.ServeHTTP(recorder, req)
+
+	assert.Equal(t, http.StatusOK, recorder.Code)
+	assert.Equal(t, "application/json; charset=utf-8", recorder.Header().Get("Content-Type"))
+
+	var response struct {
+		Soldiers []*model.Soldier `json:"soldiers"`
+	}
+	_ = json.Unmarshal(recorder.Body.Bytes(), &response)
+
+	assert.Equal(t, newSoldier_1.Name, response.Soldiers[0].Name)
+	assert.Equal(t, newSoldier_2.Name, response.Soldiers[1].Name)
+}
+
+func TestGetAllSoldierWithEmptySoldierList(t *testing.T) {
+	engine, mockService := ServerMock(t)
+
+	mockService.On("GetAllSoldier").Return([]*model.Soldier{}, nil)
+
+	req, _ := http.NewRequest("GET", "/soldier", nil)
+	recorder := httptest.NewRecorder()
+	engine.ServeHTTP(recorder, req)
+
+	assert.Equal(t, http.StatusOK, recorder.Code)
+	assert.Equal(t, "application/json; charset=utf-8", recorder.Header().Get("Content-Type"))
+
+	var response struct {
+		Soldiers []*model.Soldier `json:"soldiers"`
+	}
+	_ = json.Unmarshal(recorder.Body.Bytes(), &response)
+
+	assert.Equal(t, 0, len(response.Soldiers))
 }
 
 func TestAddSoldier(t *testing.T) {

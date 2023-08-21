@@ -14,6 +14,7 @@ var (
 )
 
 type DutyService interface {
+	GetAllSoldier() []*model.Soldier
 	AddSoldier(soldier *model.Soldier) error
 	UpdateSoldier(soldierID string, updatedSoldier *model.Soldier) error
 	GetSoldierByID(soliderID string) (*model.Soldier, error)
@@ -28,6 +29,22 @@ func NewSoldierService() DutyService {
 	return &soldierDutyService{
 		soldiers: soldiersMap,
 	}
+}
+
+func (s *soldierDutyService) GetAllSoldier() []*model.Soldier {
+	soldiersMutex.RLock()
+	defer soldiersMutex.RUnlock()
+
+	soldierList := make([]*model.Soldier, 0, len(s.soldiers))
+	for _, soldier := range s.soldiers {
+		soldierList = append(soldierList, soldier)
+	}
+
+	if len(soldierList) == 0 {
+		return nil
+	}
+
+	return soldierList
 }
 
 func (s *soldierDutyService) AddSoldier(soldier *model.Soldier) error {

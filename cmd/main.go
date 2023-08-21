@@ -14,6 +14,7 @@ func main() {
 		soldierService := service.NewSoldierService()
 		soldierController := controller.NewSoldierController(soldierService)
 
+		soldierGroup.GET("/", soldierController.GetAllSoldier)
 		soldierGroup.POST("/", soldierController.AddSoldier)
 		soldierGroup.GET("/:id", soldierController.GetSoldierByID)
 		soldierGroup.PUT("/:id", soldierController.UpdateSoldier)
