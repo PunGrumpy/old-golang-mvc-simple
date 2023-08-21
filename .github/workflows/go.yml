@@ -27,12 +27,12 @@ jobs:
         uses: golangci/golangci-lint-action@v3
 
       - name: 🧪 Test
-        run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+        run: go test -race -coverprofile=coverage.out -covermode=atomic ./...
 
       - name: 📊 Coverage
         uses: codecov/codecov-action@v3
         with:
-          file: coverage.txt
+          file: coverage.out
           flags: unittests
           name: codecov-umbrella
 
