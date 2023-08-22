@@ -176,6 +176,25 @@ func TestAddSoldierWithAlreadyExistSoldier(t *testing.T) {
 	assert.Equal(t, "application/json; charset=utf-8", recorder.Header().Get("Content-Type"))
 }
 
+func TestAddSoldierWithInvalidSalaryRange(t *testing.T) {
+	engine, _ := ServerMock(t)
+
+	newSoldier := model.Soldier{
+		Name:   "Alice",
+		Rank:   "Sergeant",
+		Salary: 100001,
+	}
+
+	payload, _ := json.Marshal(newSoldier)
+	req, _ := http.NewRequest("POST", "/soldier", strings.NewReader(string(payload)))
+	recorder := httptest.NewRecorder()
+
+	engine.ServeHTTP(recorder, req)
+
+	assert.Equal(t, http.StatusBadRequest, recorder.Code)
+	assert.Equal(t, "application/json; charset=utf-8", recorder.Header().Get("Content-Type"))
+}
+
 func TestUpdateSoldier(t *testing.T) {
 	engine, mockService := ServerMock(t)
 

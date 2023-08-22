@@ -44,6 +44,11 @@ func (s *soldierController) AddSoldier(c *gin.Context) {
 		return
 	}
 
+	if newSoldier.Salary < 0 || newSoldier.Salary > 100000 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Salary Range"})
+		return
+	}
+
 	if err := s.dutyService.AddSoldier(&newSoldier); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
